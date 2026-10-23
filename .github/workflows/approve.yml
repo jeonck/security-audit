@@ -1,0 +1,40 @@
+# 이슈에 `approved` 라벨(소유자만 가능)이 붙으면 입력을 검증하고 비공개 저장소의 감사를 시작시킨다.
+# 이 저장소는 공개라 감사 내용은 여기서 실행하지 않는다. 이슈 본문은 신뢰할 수 없는 입력이므로 env 로만 전달한다.
+name: Approve audit
+on:
+  issues:
+    types: [labeled]
+permissions: {issues: write, contents: read}
+jobs:
+  approve:
+    if: github.event.label.name == 'approved' && github.actor == github.repository_owner
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      OPS_DISPATCH_TOKEN: ${{ secrets.OPS_DISPATCH_TOKEN }}
+      ISSUE: ${{ github.event.issue.number }}
+      ISSUE_BODY: ${{ github.event.issue.body }}
+      LABELS: ${{ join(github.event.issue.labels.*.name, ',') }}
+      REPO_SLUG: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate and dispatch
+        shell: bash
+        run: |
+          set -uo pipefail
+          case ",$LABELS," in *,running,*|*,done,*) echo "이미 시작되었거나 완료됨"; exit 0;; esac
+          fail() {
+            gh issue comment "$ISSUE" -R "$REPO_SLUG" --body "$1"
+            gh issue edit "$ISSUE" -R "$REPO_SLUG" --add-label failed --remove-label approved
+            exit 0
+          }
+          parsed=$(node .github/scripts/parse-issue.cjs) || fail "접수 내용을 확인해 주세요. $(jq -r .error <<<"$parsed")"
+          repo=$(jq -r .value.repo <<<"$parsed"); ref=$(jq -r .value.ref <<<"$parsed"); plan=$(jq -r .value.plan <<<"$parsed")
+          priv=$(gh api "repos/$repo" --jq .private 2>/dev/null) || fail "저장소를 찾을 수 없거나 비공개입니다. 현재는 공개 저장소만 점검할 수 있습니다."
+          [ "$priv" = "false" ] || fail "공개 저장소만 점검할 수 있습니다."
+          [ -n "$OPS_DISPATCH_TOKEN" ] || fail "운영 설정이 아직 완료되지 않았습니다. 운영자가 확인 후 다시 승인합니다."
+          GH_TOKEN="$OPS_DISPATCH_TOKEN" gh api repos/jeonck/security-audit-ops/dispatches \
+            -f event_type=audit -f "client_payload[repo]=$repo" -f "client_payload[ref]=$ref" \
+            -f "client_payload[plan]=$plan" -f "client_payload[issue]=$ISSUE" >/dev/null || fail "점검 시작 요청에 실패했습니다. 운영자가 확인합니다."
+          gh issue edit "$ISSUE" -R "$REPO_SLUG" --add-label running
+          gh issue comment "$ISSUE" -R "$REPO_SLUG" --body "접수가 승인되어 점검을 시작했습니다. 완료되면 이 이슈에 알려드립니다."
