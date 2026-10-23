@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       repo: {description: "대상 저장소 (owner/name)", required: true}
-      ref: {description: "브랜치/태그/SHA", default: HEAD}
+      ref: {description: "브랜치/태그/SHA (비우면 기본 브랜치)", default: ""}
       passphrase: {description: "리포트 암호화 암호 (고객과 별도 전달)", required: true}
 permissions: {contents: read}
 jobs:
@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ inputs.repo }}
-          ref: ${{ inputs.ref == 'HEAD' && '' || inputs.ref }}
+          ref: ${{ inputs.ref }}
           token: ${{ secrets.AUDIT_TARGET_TOKEN || github.token }}
           path: target
           persist-credentials: false
