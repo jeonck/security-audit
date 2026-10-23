@@ -7,6 +7,8 @@ on:
 permissions: {issues: write, contents: read}
 jobs:
   approve:
+    # 같은 이슈의 승인 이벤트가 겹쳐 들어와도 한 번에 하나씩만 처리한다(중복 감사 방지).
+    concurrency: {group: "approve-${{ github.event.issue.number }}", cancel-in-progress: false}
     if: github.event.label.name == 'approved' && github.actor == github.repository_owner
     runs-on: ubuntu-latest
     env:
@@ -22,7 +24,9 @@ jobs:
         shell: bash
         run: |
           set -uo pipefail
-          case ",$LABELS," in *,running,*|*,done,*) echo "이미 시작되었거나 완료됨"; exit 0;; esac
+          # 이벤트 시점 라벨이 아니라 현재 라벨을 읽는다(겹친 이벤트가 서로 못 보는 문제 방지).
+          LIVE=$(gh issue view "$ISSUE" -R "$REPO_SLUG" --json labels --jq '[.labels[].name]|join(",")')
+          case ",$LIVE," in *,running,*|*,done,*) echo "이미 시작되었거나 완료됨"; exit 0;; esac
           LANG_ISSUE=ko
           fail() {
             if [ "$LANG_ISSUE" = en ]; then BODY="$2"; else BODY="$1"; fi
