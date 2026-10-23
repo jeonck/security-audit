@@ -42,7 +42,14 @@ p.lead{font-size:18px;color:var(--muted);max-width:620px;margin:0 0 var(--space-
 .card.pro{border-color:var(--accent-text);box-shadow:0 0 0 1px var(--accent-text)}
 .card h3{margin:0;font-size:16px;font-family:var(--font-mono);color:var(--accent-text)}
 .price{font-size:28px;font-weight:800;margin:var(--space-2) 0}
-.card ul{padding-left:18px;margin:var(--space-3) 0 0;color:var(--muted)}li{margin:6px 0}
+.card{display:flex;flex-direction:column}
+.card ul{padding-left:18px;margin:var(--space-3) 0;color:var(--muted);flex:1}li{margin:6px 0}
+.who{font-size:13px;color:var(--muted);margin:var(--space-2) 0 0}
+.hook{font-size:19px;font-weight:800;line-height:1.4;margin:var(--space-2) 0 0}
+.per{font-size:14px;font-weight:500;color:var(--muted)}
+.badge{align-self:flex-start;font:700 12px var(--font-mono);background:var(--accent);color:var(--on-accent);padding:2px 8px;border-radius:var(--radius-s);margin-bottom:var(--space-2)}
+.btn.ghost{background:transparent;color:var(--accent-text);border:1px solid var(--accent-text);text-align:center}
+.section-lead{color:var(--muted);margin:calc(-1*var(--space-3)) 0 var(--space-4)}
 small{color:var(--muted)}
 .trust{padding:0;list-style:none}.trust li{padding-left:28px;position:relative}
 .trust li::before{content:"✓";position:absolute;left:0;color:var(--accent-text);font-weight:700}
@@ -64,13 +71,29 @@ small{color:var(--muted)}
 <li><b>리포트</b><span>확정 / 추가확인 필요 / 기각으로 구분해 전달</span></li>
 </ol>
 
-<h2>플랜</h2>
+<h2>지금 우리 팀에 필요한 점검은?</h2>
+<p class="section-lead">보안 사고는 대개 "나중에 보자"며 미뤄둔 코드에서 시작됩니다. 지금 상황에 맞는 플랜을 고르세요.</p>
 <div class="grid">
-<div class="card"><h3>Scan</h3><div class="price">₩490,000~</div><ul><li>단일 저장소 자동 감사</li><li>확정 취약점 요약 리포트</li><li>1회 Q&amp;A</li></ul></div>
-<div class="card pro"><h3>Audit</h3><div class="price">₩1,900,000~</div><ul><li>전체 6단계 + 전문가 검토</li><li>상세 재현 경로·수정 가이드</li><li>수정 후 재점검 1회</li></ul></div>
-<div class="card"><h3>Retainer</h3><div class="price">₩990,000/월</div><ul><li>릴리스마다 변경분 점검</li><li>누적 커버리지 추적</li><li>우선 대응</li></ul></div>
+<div class="card"><h3>Scan</h3>
+<p class="who">출시를 앞두고 한 번은 확인하고 싶은 팀</p>
+<p class="hook">출시 버튼을 누르기 전,<br>마음 편해지는 한 번의 점검</p>
+<div class="price">₩490,000~ <span class="per">/ 1회</span></div>
+<ul><li>로그인·결제·업로드처럼 공격이 몰리는 곳부터 확인</li><li>오탐은 걸러내고 진짜 고칠 것만 요약</li><li>결과를 보고 궁금한 점은 질의응답 1회</li></ul>
+<a class="btn ghost" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">Scan 신청하기</a></div>
+<div class="card pro"><span class="badge">추천</span><h3>Audit</h3>
+<p class="who">투자 실사나 대기업 보안 심사를 앞둔 팀</p>
+<p class="hook">"보안 점검 받으셨나요?"<br>그 질문에 리포트로 답하세요</p>
+<div class="price">₩1,900,000~ <span class="per">/ 1회</span></div>
+<ul><li>6단계 전체 감사 결과를 보안 담당자가 직접 검토</li><li>취약점마다 재현 경로와 바로 따라 할 수정 가이드</li><li>고친 뒤 다시 점검해 해결됐는지 확인</li></ul>
+<a class="btn" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">Audit 상담하기</a></div>
+<div class="card"><h3>Retainer</h3>
+<p class="who">매주 배포하지만 보안 담당자는 없는 팀</p>
+<p class="hook">보안 담당자 없이도,<br>배포할 때마다 한 번 더 확인</p>
+<div class="price">₩990,000 <span class="per">/ 월</span></div>
+<ul><li>릴리스마다 새로 바뀐 코드만 골라 점검</li><li>지난 결과를 이어받아 놓친 부분까지 추적</li><li>급한 보안 문의는 가장 먼저 처리</li></ul>
+<a class="btn ghost" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">Retainer 상담하기</a></div>
 </div>
-<small>금액은 저장소 규모에 따라 조정됩니다.</small>
+<small>금액은 저장소 규모에 따라 조정됩니다. 본 점검은 법정 인증이나 모의해킹 확인서를 대체하지 않습니다.</small>
 
 <h2>신뢰와 보안</h2>
 <ul class="trust">
