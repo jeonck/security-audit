@@ -72,6 +72,12 @@ h1{font-size:clamp(32px,4.6vw,52px);line-height:1.18}
 .flow li.done i{background:var(--teal-400);border-color:var(--teal-400);color:var(--ink-950)}
 .ev-note{font-size:13px;color:var(--dark-muted);margin-top:var(--s3)}
 
+/* why */
+.why{display:grid;gap:var(--s3);grid-template-columns:repeat(2,1fr);margin-top:var(--s5)}
+.why>div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:var(--s4)}
+.why h3{font-size:20px;margin-bottom:var(--s2)}.why p{color:var(--muted);font-size:15px}
+@media(max-width:760px){.why{grid-template-columns:1fr}}
+
 /* verdicts */
 .verdicts{display:grid;margin-top:var(--s5);border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);grid-template-columns:repeat(3,1fr)}
 .verdicts>div{padding:var(--s4);border-right:1px solid var(--line)}.verdicts>div:last-child{border:0}
@@ -130,7 +136,7 @@ footer{background:var(--dark-bg);color:var(--dark-muted);padding:var(--s4) 0 var
 <body>
 <header><div class="wrap">
 <a class="brand" href="/" aria-label="Metacog Audit 홈"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="f" d="M6 22V6h16M42 6h16v16M58 42v16H42M22 58H6V42" stroke-width="6"/><path class="c" d="M20 33l8.5 8.5L45 24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Metacog<b>Audit</b></span></a>
-<nav><a href="#verdict">판정 원칙</a><a href="#process">진행 방식</a><a href="#proof">공개 성적표</a><a href="#plans">플랜</a><a href="/en/">English</a><a class="btn sm" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">점검 문의</a></nav>
+<nav><a href="#why">특징</a><a href="#verdict">판정 원칙</a><a href="#process">진행 방식</a><a href="#proof">공개 성적표</a><a href="#plans">플랜</a><a href="/en/">English</a><a class="btn sm" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">점검 문의</a></nav>
 </div></header>
 
 <main>
@@ -151,6 +157,17 @@ footer{background:var(--dark-bg);color:var(--dark-muted);padding:var(--s4) 0 var
 </ol>
 <p class="ev-note">취약점이 일부러 심어진 연습용 앱(DVPWA)으로 시험한 결과입니다.</p>
 </aside>
+</div></section>
+
+<section id="why"><div class="wrap">
+<h2>규칙 목록에 없는 곳까지 읽습니다</h2>
+<p class="sub">정해진 규칙으로 훑는 도구와 달리, 코드를 읽고 맥락을 따라가며 점검합니다. 규칙 기반 정적 분석을 대체하지 않고, 규칙으로 만들기 어려운 곳을 보완합니다.</p>
+<div class="why">
+<div><h3>맥락이 필요한 논리 결함</h3><p>화면에는 관리자 버튼만 보이는데 서버는 누가 요청하는지 확인하지 않는 경우처럼, 파일 여러 곳을 이어 읽어야 보이는 문제를 찾습니다. 공개 시험에서도 이런 결함이 확정되었습니다.</p></div>
+<div><h3>코드 밖의 것들</h3><p>배포 설정, CI 워크플로, 외부 입력을 받는 AI 파이프라인처럼 소스 코드가 아닌 부분도 함께 점검합니다.</p></div>
+<div><h3>맞춤 점검</h3><p>서비스 특성을 알려 주시면 거기에 집중합니다. 예를 들어 고객 간 데이터 분리나 결제 흐름을 먼저 봅니다. Audit 플랜에서는 짧은 상담으로 중점 영역을 정합니다.</p></div>
+<div><h3>언어별 규칙을 기다릴 필요가 없음</h3><p>언어나 프레임워크마다 규칙이 만들어질 때까지 기다리지 않고 바로 점검합니다. 지금까지 시험한 것은 Python, Hugo/Go 템플릿, GitHub Actions이며, 그 외 언어는 점검 전에 가능 여부를 안내합니다.</p></div>
+</div>
 </div></section>
 
 <section id="verdict"><div class="wrap">

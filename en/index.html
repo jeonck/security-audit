@@ -72,6 +72,12 @@ h1{font-size:clamp(32px,4.6vw,52px);line-height:1.18}
 .flow li.done i{background:var(--teal-400);border-color:var(--teal-400);color:var(--ink-950)}
 .ev-note{font-size:13px;color:var(--dark-muted);margin-top:var(--s3)}
 
+/* why */
+.why{display:grid;gap:var(--s3);grid-template-columns:repeat(2,1fr);margin-top:var(--s5)}
+.why>div{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:var(--s4)}
+.why h3{font-size:20px;margin-bottom:var(--s2)}.why p{color:var(--muted);font-size:15px}
+@media(max-width:760px){.why{grid-template-columns:1fr}}
+
 /* verdicts */
 .verdicts{display:grid;margin-top:var(--s5);border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);grid-template-columns:repeat(3,1fr)}
 .verdicts>div{padding:var(--s4);border-right:1px solid var(--line)}.verdicts>div:last-child{border:0}
@@ -130,7 +136,7 @@ footer{background:var(--dark-bg);color:var(--dark-muted);padding:var(--s4) 0 var
 <body>
 <header><div class="wrap">
 <a class="brand" href="/en/" aria-label="Metacog Audit home"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="f" d="M6 22V6h16M42 6h16v16M58 42v16H42M22 58H6V42" stroke-width="6"/><path class="c" d="M20 33l8.5 8.5L45 24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Metacog<b>Audit</b></span></a>
-<nav><a href="#verdict">Verdicts</a><a href="#process">Process</a><a href="#proof">Public scorecard</a><a href="#plans">Plans</a><a href="/">한국어</a><a class="btn sm" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request-en.yml">Request a review</a></nav>
+<nav><a href="#why">Why us</a><a href="#verdict">Verdicts</a><a href="#process">Process</a><a href="#proof">Public scorecard</a><a href="#plans">Plans</a><a href="/">한국어</a><a class="btn sm" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request-en.yml">Request a review</a></nav>
 </div></header>
 
 <main>
@@ -151,6 +157,17 @@ footer{background:var(--dark-bg);color:var(--dark-muted);padding:var(--s4) 0 var
 </ol>
 <p class="ev-note">Result of testing an intentionally vulnerable practice app (DVPWA).</p>
 </aside>
+</div></section>
+
+<section id="why"><div class="wrap">
+<h2>We read what rule lists don't cover</h2>
+<p class="sub">Instead of scanning against a fixed rule set, we read the code and follow the context. We don't replace rule-based scanners; we cover what is hard to express as rules.</p>
+<div class="why">
+<div><h3>Logic flaws that need context</h3><p>Think of a screen that only shows admin buttons while the server never checks who is asking. You have to read several files together to see it. A flaw of exactly this kind was confirmed in our public test.</p></div>
+<div><h3>Beyond the code</h3><p>Deployment settings, CI workflows and AI pipelines that take outside input are reviewed together with the source.</p></div>
+<div><h3>Tailored review</h3><p>Tell us what matters about your product, such as tenant data separation or the payment flow, and we focus there. On the Audit plan, focus areas are agreed in a short consultation.</p></div>
+<div><h3>No waiting for language rules</h3><p>We don't need a rule set written for each language or framework. So far we have tested Python, Hugo/Go templates and GitHub Actions; for other languages we'll tell you before we start whether a review makes sense.</p></div>
+</div>
 </div></section>
 
 <section id="verdict"><div class="wrap">
