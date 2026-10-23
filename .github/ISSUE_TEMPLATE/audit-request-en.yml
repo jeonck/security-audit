@@ -1,0 +1,41 @@
+name: Security review request
+description: Request a security review of a public repository.
+title: "[Request] "
+labels: ["audit-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue is **public**. Never post email addresses, source code, secrets or tokens here.
+        We'll reply in comments on this issue; GitHub will notify your account.
+        Only **public repositories** are accepted for now. Private repositories are not supported.
+  - type: input
+    id: repo
+    attributes:
+      label: Repository URL
+      description: "Example: https://github.com/owner/name"
+    validations: {required: true}
+  - type: input
+    id: ref
+    attributes:
+      label: Branch / tag / commit (optional)
+      description: If left empty, the default branch is reviewed.
+  - type: dropdown
+    id: plan
+    attributes:
+      label: Plan
+      options: [Scan, Audit, Retainer]
+    validations: {required: true}
+  - type: dropdown
+    id: lang
+    attributes:
+      label: Report language
+      options: [English, Korean (한국어)]
+    validations: {required: true}
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Confirmation
+      options:
+        - label: I own this code or have written authorization to have it security-reviewed.
+          required: true

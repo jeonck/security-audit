@@ -1,6 +1,6 @@
 name: Deploy Pages
 on:
-  push: {branches: [main], paths: [index.html, CNAME, "assets/**", "*.html"]}
+  push: {branches: [main], paths: [index.html, CNAME, "assets/**", "*.html", "en/**"]}
   workflow_dispatch:
 permissions: {contents: read, pages: write, id-token: write}
 concurrency: {group: pages, cancel-in-progress: true}
@@ -10,7 +10,7 @@ jobs:
     environment: {name: github-pages, url: "${{ steps.d.outputs.page_url }}"}
     steps:
       - uses: actions/checkout@v4
-      - run: mkdir _site && cp *.html CNAME _site/ && cp -R assets _site/
+      - run: mkdir _site && cp *.html CNAME _site/ && cp -R assets en _site/
       - uses: actions/upload-pages-artifact@v3
         with: {path: _site}
       - id: d

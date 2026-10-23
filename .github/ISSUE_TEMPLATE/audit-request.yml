@@ -26,6 +26,12 @@ body:
       label: 희망 플랜
       options: [Scan, Audit, Retainer]
     validations: {required: true}
+  - type: dropdown
+    id: lang
+    attributes:
+      label: 리포트 언어
+      options: [한국어, English]
+    validations: {required: true}
   - type: checkboxes
     id: consent
     attributes:

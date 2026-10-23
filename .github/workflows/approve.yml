@@ -23,18 +23,22 @@ jobs:
         run: |
           set -uo pipefail
           case ",$LABELS," in *,running,*|*,done,*) echo "이미 시작되었거나 완료됨"; exit 0;; esac
+          LANG_ISSUE=ko
           fail() {
-            gh issue comment "$ISSUE" -R "$REPO_SLUG" --body "$1"
+            if [ "$LANG_ISSUE" = en ]; then BODY="$2"; else BODY="$1"; fi
+            gh issue comment "$ISSUE" -R "$REPO_SLUG" --body "$BODY"
             gh issue edit "$ISSUE" -R "$REPO_SLUG" --add-label failed --remove-label approved
             exit 0
           }
-          parsed=$(node .github/scripts/parse-issue.cjs) || fail "접수 내용을 확인해 주세요. $(jq -r .error <<<"$parsed")"
-          repo=$(jq -r .value.repo <<<"$parsed"); ref=$(jq -r .value.ref <<<"$parsed"); plan=$(jq -r .value.plan <<<"$parsed")
-          priv=$(gh api "repos/$repo" --jq .private 2>/dev/null) || fail "저장소를 찾을 수 없거나 비공개입니다. 현재는 공개 저장소만 점검할 수 있습니다."
-          [ "$priv" = "false" ] || fail "공개 저장소만 점검할 수 있습니다."
-          [ -n "$OPS_DISPATCH_TOKEN" ] || fail "운영 설정이 아직 완료되지 않았습니다. 운영자가 확인 후 다시 승인합니다."
+          parsed=$(node .github/scripts/parse-issue.cjs) || { LANG_ISSUE=$(jq -r '.lang // "ko"' <<<"$parsed"); fail "접수 내용을 확인해 주세요. $(jq -r .error <<<"$parsed")" "Please check your request. $(jq -r .error <<<"$parsed")"; }
+          repo=$(jq -r .value.repo <<<"$parsed"); ref=$(jq -r .value.ref <<<"$parsed"); plan=$(jq -r .value.plan <<<"$parsed"); lang=$(jq -r .value.lang <<<"$parsed")
+          LANG_ISSUE=$lang
+          priv=$(gh api "repos/$repo" --jq .private 2>/dev/null) || fail "저장소를 찾을 수 없거나 비공개입니다. 현재는 공개 저장소만 점검할 수 있습니다." "The repository was not found or is private. Only public repositories can be reviewed at the moment."
+          [ "$priv" = "false" ] || fail "공개 저장소만 점검할 수 있습니다." "Only public repositories can be reviewed at the moment."
+          [ -n "$OPS_DISPATCH_TOKEN" ] || fail "운영 설정이 아직 완료되지 않았습니다. 운영자가 확인 후 다시 승인합니다." "Setup isn't complete yet. We'll approve your request again once it's fixed."
           GH_TOKEN="$OPS_DISPATCH_TOKEN" gh api repos/jeonck/security-audit-ops/dispatches \
             -f event_type=audit -f "client_payload[repo]=$repo" -f "client_payload[ref]=$ref" \
-            -f "client_payload[plan]=$plan" -f "client_payload[issue]=$ISSUE" >/dev/null || fail "점검 시작 요청에 실패했습니다. 운영자가 확인합니다."
+            -f "client_payload[plan]=$plan" -f "client_payload[lang]=$lang" -f "client_payload[issue]=$ISSUE" >/dev/null || fail "점검 시작 요청에 실패했습니다. 운영자가 확인합니다." "We couldn't start the review. We're looking into it."
           gh issue edit "$ISSUE" -R "$REPO_SLUG" --add-label running
-          gh issue comment "$ISSUE" -R "$REPO_SLUG" --body "접수가 승인되어 점검을 시작했습니다. 완료되면 이 이슈에 알려드립니다."
+          if [ "$lang" = en ]; then M="Your request was approved and the review has started. We will update this issue when it is done."; else M="접수가 승인되어 점검을 시작했습니다. 완료되면 이 이슈에 알려드립니다."; fi
+          gh issue comment "$ISSUE" -R "$REPO_SLUG" --body "$M"

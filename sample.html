@@ -2,6 +2,9 @@
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>샘플 리포트: 탐지력 시험 — Metacog Audit</title>
 <meta name="description" content="취약점이 알려진 연습용 앱(DVPWA)으로 Metacog Audit의 탐지력을 시험한 결과를 대시보드로 공개합니다.">
+<link rel="alternate" hreflang="ko" href="https://security-audit.metacog.co.kr/sample.html">
+<link rel="alternate" hreflang="en" href="https://security-audit.metacog.co.kr/en/sample.html">
+<link rel="alternate" hreflang="x-default" href="https://security-audit.metacog.co.kr/sample.html">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <style>
 /* primitive */
@@ -94,19 +97,19 @@ details p{color:var(--muted);margin:var(--space-2) 0 0;font-size:14px}details p 
 .plain{display:block;font-weight:400;font-size:13px;color:var(--muted)}
 summary>span:last-of-type{display:block}
 </style></head><body><main>
-<a class="brand" href="/" aria-label="Metacog Audit 홈"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="f" d="M6 22V6h16M42 6h16v16M58 42v16H42M22 58H6V42" stroke-width="6"/><path class="c" d="M20 33l8.5 8.5L45 24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Metacog<b>Audit</b></span></a>
+<a class="brand" href="/" aria-label="Metacog Audit 홈"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="f" d="M6 22V6h16M42 6h16v16M58 42v16H42M22 58H6V42" stroke-width="6"/><path class="c" d="M20 33l8.5 8.5L45 24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Metacog<b>Audit</b></span></a> <a class="meta" href="/en/sample.html" style="margin-left:16px">English</a>
 <div class="head"><div><p class="tag">샘플 리포트 · 탐지력 시험</p><h1>"일부러 구멍 낸 앱"으로 점검 실력 시험</h1></div>
 <div class="meta">시험 대상 DVPWA · 정밀 점검 모드 · 약 28분</div></div>
 <div class="intro"><b>이 시험은 무엇인가요?</b> 보안 점검 서비스가 실제로 문제를 찾아내는지 보여주려면 정답을 아는 문제가 필요합니다. <b>DVPWA</b>(<i>Damn Vulnerable Python Web Application</i>)는 보안 교육용으로 <b>보안 구멍을 일부러 여러 개 만들어 둔 수강 관리 웹사이트</b>이고, 어떤 구멍이 있는지 개발자가 미리 공개해 두었습니다. 그 공개된 5개를 정답지로 삼아, 우리 점검이 몇 개나 찾는지 그대로 공개합니다.</div>
 
 <div class="level">
 <div class="on"><b>이 샘플의 수준: Scan (자동 점검 결과)</b>AI 에이전트 34회가 6단계로 점검한 결과를 그대로 정리했습니다.<ul><li>포함: 자동 6단계 감사, 확정·추가 확인·기각 판정</li><li>미포함: 담당자 직접 검토, 재현 절차 작성, 수정 후 재점검</li></ul></div>
-<div><b>Audit에서 추가되는 것</b>같은 자동 점검 위에 사람이 더해집니다.<ul><li>보안 담당자가 모든 확정 항목을 직접 검토</li><li>항목별 재현 경로와 따라 할 수 있는 수정 가이드</li><li>고친 뒤 다시 점검해 해결 여부 확인</li></ul></div>
+<div><b>Audit에서 추가되는 것</b>같은 자동 점검 위에 사람이 더해집니다.<ul><li>보안 담당자가 모든 확정 항목을 전달 전에 직접 검토</li><li>항목별 재현 경로와 따라 할 수 있는 수정 가이드</li><li>고친 뒤 다시 점검해 해결 여부 확인</li></ul></div>
 </div>
 <div class="kpis">
 <div class="kpi"><div class="l">정답 5개 중 정확히 찾음</div><div class="v" style="color:var(--ok)">2</div><div class="s">입력창 해킹 · 악성 글 심기</div></div>
-<div class="kpi"><div class="l">개선 권고로 언급</div><div class="v" style="color:var(--warn)">3</div><div class="s">약한 암호화 · 가짜 요청 · 로그인 도용</div></div>
-<div class="kpi"><div class="l">정답지에 없던 진짜 문제</div><div class="v">1</div><div class="s">로그인 없이 성적·과목 입력 가능</div></div>
+<div class="kpi"><div class="l">개선 권고로 언급</div><div class="v" style="color:var(--warn)">3</div><div class="s">약한 비밀번호 저장 · 가짜 요청 · 세션 고정</div></div>
+<div class="kpi"><div class="l">정답지에 없던 진짜 문제</div><div class="v">1</div><div class="s">접근 제어 결함: 로그인 없이 성적·과목 입력 가능</div></div>
 <div class="kpi"><div class="l">아예 못 찾음</div><div class="v">0</div><div class="s">5개 모두 리포트에 등장</div></div>
 </div>
 
@@ -131,12 +134,12 @@ summary>span:last-of-type{display:block}
 
 <h2 class="sec">확실하게 확인된 문제 3건</h2>
 <details open><summary><span class="chip hi">▲ 위험 높음</span><span>로그인 없이 입력창으로 데이터베이스를 조종할 수 있음<span class="plain">기술 용어: SQL 인젝션</span></span></summary>
-<p><b>무슨 일이 생기나요?</b> 누구나 글쓰기 칸에 특별한 문장을 넣는 것만으로, 저장된 모든 회원의 아이디와 비밀번호 정보를 화면에 불러올 수 있습니다. 로그인도 필요 없고, 요청 한 번이면 됩니다.</p>
+<p><b>무슨 일이 생기나요?</b> 누구나 글쓰기 칸에 특별한 값을 넣는 것만으로, 저장된 모든 회원의 아이디와 비밀번호 해시값을 화면에 불러올 수 있습니다. 로그인도 필요 없고, 요청 한 번이면 됩니다.</p>
 <p><b>어떻게 고치나요?</b> 입력값을 명령문과 분리해 처리하고, 이 기능에 로그인 확인을 추가합니다. <code>sqli/dao/student.py:42</code></p></details>
 <details><summary><span class="chip mid">● 위험 중간</span><span>남이 심어 둔 악성 글이 다른 방문자 화면에서 실행됨<span class="plain">기술 용어: 저장형 XSS</span></span></summary>
 <p><b>무슨 일이 생기나요?</b> 익명으로 쓴 글에 숨겨 둔 프로그램이, 그 글을 보는 방문자와 관리자의 브라우저에서 그대로 실행됩니다. 화면 조작, 가짜 로그인창 띄우기, 접속 정보 탈취에 쓰일 수 있습니다.</p>
 <p><b>어떻게 고치나요?</b> 글을 화면에 보여줄 때 자동으로 안전하게 변환하는 설정을 켭니다. <code>sqli/app.py:35</code></p></details>
-<details><summary><span class="chip mid">● 위험 중간</span><span>로그인 없이도 성적·과목·학생을 만들 수 있음<span class="plain">기술 용어: 서버 측 권한 검사 누락</span></span></summary>
+<details><summary><span class="chip mid">● 위험 중간</span><span>로그인 없이도 성적·과목·학생을 만들 수 있음<span class="plain">기술 용어: 접근 제어 결함(서버 측 인증·권한 검사 누락)</span></span></summary>
 <p><b>무슨 일이 생기나요?</b> 화면에서는 관리자에게만 버튼이 보이지만, 서버는 누가 요청했는지 확인하지 않습니다. 버튼이 없어도 직접 요청을 보내면 성적을 입력할 수 있습니다. 건물 앞에 "직원 전용" 표지만 붙이고 문은 잠그지 않은 것과 같습니다.</p>
 <p><b>어떻게 고치나요?</b> 해당 기능마다 서버에서 관리자 여부를 확인합니다. <code>sqli/views.py:52,84,135</code></p></details>
 
@@ -147,7 +150,7 @@ summary>span:last-of-type{display:block}
 <tr><td>악성 글 심기 <span class="plain">저장형 XSS</span></td><td><span class="chip ok">✔ 정확히 찾음</span></td><td>확실한 문제 중 위험 중간</td></tr>
 <tr><td>비밀번호를 쉽게 풀리는 방식으로 저장 <span class="plain">MD5 해시</span></td><td><span class="chip part">◐ 권고로 언급</span></td><td>유출 시 비밀번호가 쉽게 풀린다는 영향과 교체 권고로 기재</td></tr>
 <tr><td>다른 사이트에서 몰래 보낸 가짜 요청을 막지 않음 <span class="plain">CSRF</span></td><td><span class="chip part">◐ 권고로 언급</span></td><td>방어 장치가 꺼져 있음을 확인하고 켜도록 권고</td></tr>
-<tr><td>남의 로그인 상태를 그대로 쓸 수 있음 <span class="plain">세션 고정</span></td><td><span class="chip part">◐ 권고로 언급</span></td><td>"로그인할 때 접속 번호를 새로 발급"하도록 권고</td></tr>
+<tr><td>공격자가 심어 둔 접속 번호가 로그인 뒤에도 그대로 유효함 <span class="plain">세션 고정</span></td><td><span class="chip part">◐ 권고로 언급</span></td><td>"로그인할 때 접속 번호를 새로 발급"하도록 권고</td></tr>
 </table></div>
 
 <h2 class="sec">이 시험이 말해주지 않는 것</h2>

@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Metacog Audit — Independent code security review</title>
+<meta name="description" content="Independent code security review from a team that doesn't build your code or sell security products. Every suspected issue is challenged by a separate pass and labeled by how well it holds up.">
+<meta property="og:title" content="Metacog Audit — Independent code security review">
+<link rel="alternate" hreflang="ko" href="https://security-audit.metacog.co.kr/">
+<link rel="alternate" hreflang="en" href="https://security-audit.metacog.co.kr/en/">
+<link rel="alternate" hreflang="x-default" href="https://security-audit.metacog.co.kr/">
+<link rel="icon" href="../assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* primitive */
+:root{
+--ink-950:#070b14;--ink-900:#0c1220;--ink-800:#131b2e;--ink-700:#1c2740;--ink-600:#2a3855;
+--fog-50:#f3f5f8;--fog-100:#e6eaf0;--fog-300:#c3cddd;--fog-500:#5b6b84;
+--teal-400:#2dd4bf;--teal-700:#0f766e;--red-600:#b91c1c;--red-400:#f87171;--amber-700:#b45309;--amber-400:#fbbf24;
+--s1:4px;--s2:8px;--s3:16px;--s4:24px;--s5:40px;--s6:72px;--s7:112px;
+--font:"Pretendard Variable",Pretendard,system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+/* semantic */
+--bg:var(--fog-50);--panel:#fff;--line:var(--fog-100);--fg:var(--ink-900);--muted:var(--fog-500);
+--accent:var(--teal-700);--on-accent:#fff;--hi:var(--red-600);--warn:var(--amber-700);
+--dark-bg:var(--ink-900);--dark-fg:#e8edf6;--dark-muted:#93a1ba;--dark-line:var(--ink-700)
+}
+@media(prefers-color-scheme:dark){:root{--bg:var(--ink-950);--panel:var(--ink-800);--line:var(--ink-700);--fg:#e8edf6;--muted:#93a1ba;--accent:var(--teal-400);--on-accent:var(--ink-950);--hi:var(--red-400);--warn:var(--amber-400);--dark-bg:var(--ink-900)}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{word-break:keep-all;overflow-wrap:break-word;margin:0;background:var(--bg);color:var(--fg);font:17px/1.7 var(--font);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 var(--s3)}
+section{padding:var(--s7) 0 0}
+h1,h2,h3{font-weight:800;letter-spacing:-.025em;margin:0}
+h2{font-size:clamp(28px,4.2vw,42px);line-height:1.2;margin-bottom:var(--s3);max-width:20em}
+p{margin:0}.sub{color:var(--muted);max-width:36em;font-size:18px}
+
+/* header */
+header{padding:var(--s3) 0;border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;gap:var(--s4)}
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font:700 18px var(--mono)}
+.brand svg{width:30px;height:30px}.brand .f{stroke:var(--fg)}.brand .c{stroke:var(--accent)}.brand b{color:var(--accent)}
+nav{margin-left:auto;display:flex;align-items:center;gap:var(--s4);font-size:15px}
+nav a{text-decoration:none;color:var(--muted)}nav a:hover{color:var(--fg)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 var(--s4);border-radius:8px;background:var(--accent);color:var(--on-accent);font-weight:700;text-decoration:none;border:1px solid var(--accent)}
+.btn:hover{filter:brightness(1.08)}
+.btn.line{background:transparent;color:var(--fg);border-color:var(--fg)}
+nav a.btn{color:var(--on-accent)}
+.btn.sm{min-height:40px;padding:0 var(--s3);font-size:15px}
+@media(max-width:760px){nav a:not(.btn){display:none}}
+
+/* hero */
+.hero{padding-top:var(--s6)}
+.hero .wrap{display:grid;gap:var(--s5);grid-template-columns:1.15fr .85fr;align-items:center}
+h1{font-size:clamp(32px,4.6vw,52px);line-height:1.18}
+.hero .sub{margin:var(--s4) 0}
+.cta{display:flex;flex-wrap:wrap;gap:var(--s3)}
+@media(max-width:900px){.hero .wrap{grid-template-columns:1fr}}
+
+/* evidence card: 실제 시험 판정 한 건 */
+.ev{background:var(--dark-bg);color:var(--dark-fg);border-radius:14px;padding:var(--s4);border:1px solid var(--dark-line)}
+.ev-top{display:flex;justify-content:space-between;align-items:center;gap:var(--s3);font-size:13px;color:var(--dark-muted)}
+.ev h3{font-size:22px;line-height:1.35;margin:var(--s3) 0 var(--s2);color:var(--dark-fg)}
+.ev code{font:13px var(--mono);color:var(--dark-muted)}
+.risk{display:inline-flex;gap:6px;align-items:center;font-weight:700;font-size:13px;color:var(--red-400);border:1px solid currentColor;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.flow{list-style:none;margin:var(--s4) 0 0;padding:0;border-top:1px solid var(--dark-line)}
+.flow li{display:grid;grid-template-columns:28px 1fr;gap:var(--s3);padding:14px 0;border-bottom:1px solid var(--dark-line);font-size:15px;color:var(--dark-muted)}
+.flow li b{color:var(--dark-fg);display:block}
+.flow i{font:700 13px var(--mono);font-style:normal;width:24px;height:24px;border-radius:50%;border:1px solid var(--dark-muted);display:grid;place-items:center}
+.flow li.done i{background:var(--teal-400);border-color:var(--teal-400);color:var(--ink-950)}
+.ev-note{font-size:13px;color:var(--dark-muted);margin-top:var(--s3)}
+
+/* verdicts */
+.verdicts{display:grid;margin-top:var(--s5);border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);grid-template-columns:repeat(3,1fr)}
+.verdicts>div{padding:var(--s4);border-right:1px solid var(--line)}.verdicts>div:last-child{border:0}
+.verdicts h3{font-size:22px;display:flex;align-items:center;gap:10px;margin-bottom:var(--s2)}
+.verdicts h3::before{content:"";width:12px;height:12px;border-radius:3px;background:var(--c)}
+.verdicts p{color:var(--muted);font-size:15px}
+@media(max-width:760px){.verdicts{grid-template-columns:1fr}.verdicts>div{border-right:0;border-bottom:1px solid var(--line)}}
+
+/* process: 실제 순서가 있는 단계 */
+.steps{list-style:none;margin:var(--s5) 0 0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s3);counter-reset:s}
+.steps li{counter-increment:s;border-top:3px solid var(--accent);padding-top:var(--s3)}
+.steps li::before{content:counter(s);font:700 14px var(--mono);color:var(--accent)}
+.steps b{display:block;font-size:19px;margin:4px 0}.steps span{color:var(--muted);font-size:15px;display:block}
+@media(max-width:900px){.steps{grid-template-columns:1fr 1fr}}@media(max-width:520px){.steps{grid-template-columns:1fr}}
+
+/* proof */
+.proof{display:grid;gap:var(--s5);grid-template-columns:1fr 1fr;align-items:center}
+.score{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.score div{padding:var(--s4) var(--s3);border-right:1px solid var(--line)}.score div:last-child{border:0}
+.score b{display:block;font-size:56px;line-height:1;font-weight:800;letter-spacing:-.03em}
+.score span{font-size:14px;color:var(--muted);display:block;margin-top:var(--s2)}
+.proof .btn{margin-top:var(--s4)}
+@media(max-width:900px){.proof{grid-template-columns:1fr}}
+
+/* plans */
+.plans{display:grid;gap:var(--s3);grid-template-columns:repeat(3,1fr);margin-top:var(--s5)}
+.plan{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:var(--s4);display:flex;flex-direction:column}
+.plan.main{background:var(--dark-bg);color:var(--dark-fg);border-color:var(--dark-bg)}
+.plan.main .who,.plan.main li{color:var(--dark-muted)}
+.plan .name{font:700 15px var(--mono);color:var(--accent)}.plan.main .name{color:var(--teal-400)}
+.plan .who{font-size:14px;color:var(--muted);margin-top:var(--s2)}
+.plan h3{font-size:21px;line-height:1.4;margin:var(--s3) 0}
+.price{font-size:32px;font-weight:800;letter-spacing:-.02em}.price small{font-size:15px;font-weight:500;color:var(--muted)}
+.plan.main .price small{color:var(--dark-muted)}
+.plan ul{list-style:none;margin:var(--s3) 0;padding:0;flex:1;color:var(--muted);font-size:15px}
+.plan li{padding:8px 0 8px 22px;position:relative;border-top:1px solid var(--line)}.plan.main li{border-color:var(--dark-line)}
+.plan li::before{content:"✓";position:absolute;left:0;top:8px;color:var(--accent);font-weight:700}.plan.main li::before{color:var(--teal-400)}
+.plan .btn.line{color:inherit;border-color:currentColor}
+.plan.main .btn{background:var(--teal-400);color:var(--ink-950);border-color:var(--teal-400)}
+.fine{font-size:14px;color:var(--muted);margin-top:var(--s3)}
+@media(max-width:900px){.plans{grid-template-columns:1fr}}
+
+/* trust */
+.trust{display:grid;gap:var(--s4) var(--s5);grid-template-columns:1fr 1fr;margin-top:var(--s5)}
+.trust div{border-left:3px solid var(--accent);padding-left:var(--s3)}
+.trust b{display:block;font-size:19px}.trust span{color:var(--muted);font-size:15px}
+@media(max-width:760px){.trust{grid-template-columns:1fr}}
+
+.final{margin-top:var(--s7);background:var(--dark-bg);color:var(--dark-fg);padding:var(--s6) 0}
+.final h2{color:var(--dark-fg)}.final .sub{color:var(--dark-muted)}.final .cta{margin-top:var(--s4)}
+.final .btn.line{color:var(--dark-fg);border-color:var(--dark-fg)}
+.final .btn:not(.line){background:var(--teal-400);color:var(--ink-950);border-color:var(--teal-400)}
+footer{background:var(--dark-bg);color:var(--dark-muted);padding:var(--s4) 0 var(--s5);font-size:14px;border-top:1px solid var(--dark-line)}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<a class="brand" href="/en/" aria-label="Metacog Audit home"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="f" d="M6 22V6h16M42 6h16v16M58 42v16H42M22 58H6V42" stroke-width="6"/><path class="c" d="M20 33l8.5 8.5L45 24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Metacog<b>Audit</b></span></a>
+<nav><a href="#verdict">Verdicts</a><a href="#process">Process</a><a href="#proof">Public scorecard</a><a href="#plans">Plans</a><a href="/">한국어</a><a class="btn sm" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request-en.yml">Request a review</a></nav>
+</div></header>
+
+<main>
+<section class="hero"><div class="wrap">
+<div>
+<h1>You're the last person to spot flaws in your own code.<br>That's what an independent review is for.</h1>
+<p class="sub">We don't build your code and we don't sell security products. Every suspected issue is challenged by a separate pass, and each finding is labeled by how well it holds up.</p>
+<div class="cta"><a class="btn" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request-en.yml">Request a review</a><a class="btn line" href="sample.html">View the sample report</a></div>
+</div>
+<aside class="ev" aria-label="One real verdict from our public test">
+<div class="ev-top"><span>One verdict from our public test</span><span class="risk">▲ High risk</span></div>
+<h3>Anyone can manipulate the database through an input field, without logging in</h3>
+<code>sqli/dao/student.py:42</code>
+<ol class="flow">
+<li class="done"><i>1</i><span><b>Suspicious spot found</b>User input goes straight into a database command</span></li>
+<li class="done"><i>2</i><span><b>A separate AI pass tries to disprove it</b>It checks whether anything actually blocks the attack</span></li>
+<li class="done"><i>✓</i><span><b>Confirmed as a finding</b>A single request exposes member data</span></li>
+</ol>
+<p class="ev-note">Result of testing an intentionally vulnerable practice app (DVPWA).</p>
+</aside>
+</div></section>
+
+<section id="verdict"><div class="wrap">
+<h2>Every item in the report gets one of three verdicts</h2>
+<p class="sub">A bare list of "suspicious" items isn't useful. So we sort findings by how well they are proven.</p>
+<div class="verdicts">
+<div style="--c:var(--accent)"><h3>Confirmed finding</h3><p>We traced a concrete path from attacker-controlled input to the vulnerable code, and a separate pass failed to disprove it. Fix these first.</p></div>
+<div style="--c:var(--warn)"><h3>Needs validation</h3><p>Possible, but it depends on the runtime environment. We state exactly what must be checked.</p></div>
+<div style="--c:var(--muted)"><h3>Not an issue</h3><p>Suspected, then disproved and filtered out. We keep the reason so you can stop worrying.</p></div>
+</div>
+</div></section>
+
+<section id="process"><div class="wrap">
+<h2>From suspicion to confirmation</h2>
+<ol class="steps">
+<li><b>Map</b><span>We map the system's structure, where outside input enters, and its trust boundaries.</span></li>
+<li><b>Hunt</b><span>Isolated AI agents look for vulnerabilities, one attack class at a time; a coverage check then looks for gaps.</span></li>
+<li><b>Disprove</b><span>A different agent tries to prove each candidate wrong.</span></li>
+<li><b>Re-verify</b><span>The source evidence behind confirmed items is independently re-checked.</span></li>
+<li><b>Deliver</b><span>We summarize in plain language and deliver the report encrypted.</span></li>
+</ol>
+</div></section>
+
+<section id="proof"><div class="wrap proof">
+<div>
+<h2>Our detection results, published</h2>
+<p class="sub">These are the results of running the service on a practice app whose flaws are known. That includes what we only partially caught.</p>
+<a class="btn line" href="sample.html">See the full sample report</a>
+</div>
+<div class="score" role="group" aria-label="DVPWA test results">
+<div><b style="color:var(--accent)">2</b><span>of 5 known flaws reported<br>as confirmed findings</span></div>
+<div><b style="color:var(--warn)">3</b><span>flagged as<br>hardening advice only</span></div>
+<div><b>1</b><span>additional real issue<br>not in the answer key</span></div>
+</div>
+</div></section>
+
+<section id="plans"><div class="wrap">
+<h2>Which review does your team need right now?</h2>
+<p class="sub">Security debt is cheapest to fix before launch.</p>
+<div class="plans">
+<div class="plan"><span class="name">Scan</span><p class="who">Teams that want one check before launch</p>
+<h3>One focused security check before you ship</h3>
+<div class="price">₩490,000~ <small>/ once</small></div>
+<ul><li>Starts with the places attackers hit first: login, payments, uploads</li><li>False positives filtered out; you get a short list of what's worth fixing</li><li>One Q&amp;A round after you read the results</li></ul>
+<a class="btn line" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request-en.yml">Request a Scan</a></div>
+<div class="plan main"><span class="name">Audit · Recommended</span><p class="who">Teams facing investor due diligence or an enterprise customer's vendor security assessment</p>
+<h3>When they ask “Have you had a security review?”, answer with a report</h3>
+<div class="price">₩1,900,000~ <small>/ once</small></div>
+<ul><li>A human reviewer checks every confirmed finding before delivery</li><li>For each confirmed finding: the exploit path traced through the code, plus step-by-step remediation guidance</li><li>One re-review of your fixes to verify they address each finding</li></ul>
+<a class="btn" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request-en.yml">Ask about Audit</a></div>
+<div class="plan"><span class="name">Retainer</span><p class="who">Teams that ship weekly with no security owner</p>
+<h3>No security lead? Get a second look at every release.</h3>
+<div class="price">₩990,000 <small>/ month</small></div>
+<ul><li>Only the code changed since the last release is reviewed</li><li>Findings still open from your last report are re-checked in the next cycle</li><li>Priority handling for urgent security questions</li></ul>
+<a class="btn line" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request-en.yml">Ask about Retainer</a></div>
+</div>
+<p class="fine">Prices are in Korean won (KRW) and depend on repository size. Currently available for public GitHub repositories only. This is not a compliance audit and does not replace regulatory certification (e.g. ISMS-P) or a penetration test report.</p>
+</div></section>
+
+<section id="trust"><div class="wrap">
+<h2>What to know before you hand it over</h2>
+<div class="trust">
+<div><b>We only review code you own or are authorized to have reviewed</b><span>We start only after you confirm ownership or written authorization.</span></div>
+<div><b>Reports are delivered encrypted</b><span>We delete our working copy of your code when the review is complete.</span></div>
+<div><b>No conflicts of interest</b><span>We don't write your code or sell security products, so we report results as they are.</span></div>
+<div><b>We state the limits first</b><span>Every report is checked by a person before delivery; the Audit plan adds a human review of each confirmed finding. We do not guarantee the absence of vulnerabilities.</span></div>
+</div>
+</div></section>
+</main>
+
+<div class="final"><div class="wrap">
+<h2>Ask before you send any code</h2>
+<p class="sub">Leave the repository URL and we'll tell you which review fits. No source code is needed at this stage.</p>
+<div class="cta"><a class="btn" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request-en.yml">Request a review</a><a class="btn line" href="sample.html">View the sample report</a></div>
+</div></div>
+<footer><div class="wrap">Metacog Audit · Independent code security review · security-audit.metacog.co.kr</div></footer>
+</body>
+</html>

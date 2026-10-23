@@ -4,8 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Metacog Audit — 제3자 코드 보안 점검</title>
-<meta name="description" content="코드를 대신 만들지도 보안 제품을 팔지도 않는 독립 점검. 의심 건마다 별도 검증을 거쳐 증명된 것만 리포트에 씁니다.">
+<meta name="description" content="코드를 대신 만들지도 보안 제품을 팔지도 않는 독립 점검. 의심 건마다 별도 검증을 거치고, 얼마나 증명됐는지 구분해서 리포트에 씁니다.">
 <meta property="og:title" content="Metacog Audit — 제3자 코드 보안 점검">
+<link rel="alternate" hreflang="ko" href="https://security-audit.metacog.co.kr/">
+<link rel="alternate" hreflang="en" href="https://security-audit.metacog.co.kr/en/">
+<link rel="alternate" hreflang="x-default" href="https://security-audit.metacog.co.kr/">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
@@ -127,14 +130,14 @@ footer{background:var(--dark-bg);color:var(--dark-muted);padding:var(--s4) 0 var
 <body>
 <header><div class="wrap">
 <a class="brand" href="/" aria-label="Metacog Audit 홈"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="f" d="M6 22V6h16M42 6h16v16M58 42v16H42M22 58H6V42" stroke-width="6"/><path class="c" d="M20 33l8.5 8.5L45 24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Metacog<b>Audit</b></span></a>
-<nav><a href="#verdict">판정 원칙</a><a href="#process">진행 방식</a><a href="#proof">공개 성적표</a><a href="#plans">플랜</a><a class="btn sm" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">점검 문의</a></nav>
+<nav><a href="#verdict">판정 원칙</a><a href="#process">진행 방식</a><a href="#proof">공개 성적표</a><a href="#plans">플랜</a><a href="/en/">English</a><a class="btn sm" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">점검 문의</a></nav>
 </div></header>
 
 <main>
 <section class="hero"><div class="wrap">
 <div>
 <h1>내 코드는 내가 제일 못 봅니다.<br>그래서 제3자의 눈이 필요합니다</h1>
-<p class="sub">Metacog Audit는 코드를 대신 만들지도, 보안 제품을 팔지도 않는 독립 점검 서비스입니다. 의심되는 곳마다 별도로 반박해 보고, 증명된 것만 리포트에 씁니다.</p>
+<p class="sub">Metacog Audit는 코드를 대신 만들지도, 보안 제품을 팔지도 않는 독립 점검 서비스입니다. 의심되는 곳마다 별도로 반박해 보고, 얼마나 증명됐는지 구분해서 리포트에 씁니다.</p>
 <div class="cta"><a class="btn" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">점검 문의하기</a><a class="btn line" href="sample.html">샘플 리포트 보기</a></div>
 </div>
 <aside class="ev" aria-label="공개 시험에서 나온 실제 판정 한 건">
@@ -154,7 +157,7 @@ footer{background:var(--dark-bg);color:var(--dark-muted);padding:var(--s4) 0 var
 <h2>리포트의 모든 항목은 세 가지 판정 중 하나입니다</h2>
 <p class="sub">"의심스럽다"만 적힌 목록은 쓸모가 없습니다. 그래서 증명 수준에 따라 나눠서 보여드립니다.</p>
 <div class="verdicts">
-<div style="--c:var(--accent)"><h3>확실한 문제</h3><p>코드를 따라가 실제로 악용될 수 있음을 입증했고, 별도 검증도 통과한 것. 바로 고치세요.</p></div>
+<div style="--c:var(--accent)"><h3>확실한 문제</h3><p>코드를 따라가 외부 입력이 취약한 지점에 닿는 경로를 확인했고, 별도 검증이 반박하지 못한 것. 바로 고치세요.</p></div>
 <div style="--c:var(--warn)"><h3>추가 확인 필요</h3><p>가능성은 있지만 실행 환경을 봐야 알 수 있는 것. 무엇을 확인해야 하는지 정확히 적어 드립니다.</p></div>
 <div style="--c:var(--muted)"><h3>문제 아님</h3><p>의심했지만 반박되어 걸러낸 것. 걱정하지 않아도 되는 이유를 함께 남깁니다.</p></div>
 </div>
@@ -196,15 +199,15 @@ footer{background:var(--dark-bg);color:var(--dark-muted);padding:var(--s4) 0 var
 <div class="plan main"><span class="name">Audit · 추천</span><p class="who">투자 실사나 대기업 보안 심사를 앞둔 팀</p>
 <h3>"보안 점검 받으셨나요?"<br>그 질문에 리포트로 답하세요</h3>
 <div class="price">₩1,900,000~ <small>/ 1회</small></div>
-<ul><li>6단계 전체 감사 결과를 보안 담당자가 직접 검토</li><li>취약점마다 재현 경로와 바로 따라 할 수정 가이드</li><li>고친 뒤 다시 점검해 해결됐는지 확인</li></ul>
+<ul><li>보안 담당자가 모든 확정 항목을 직접 검토</li><li>취약점마다 재현 경로와 바로 따라 할 수정 가이드</li><li>고친 뒤 다시 점검해 해결됐는지 확인</li></ul>
 <a class="btn" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">Audit 상담하기</a></div>
 <div class="plan"><span class="name">Retainer</span><p class="who">매주 배포하지만 보안 담당자는 없는 팀</p>
 <h3>보안 담당자 없이도,<br>배포할 때마다 한 번 더 확인</h3>
 <div class="price">₩990,000 <small>/ 월</small></div>
-<ul><li>릴리스마다 새로 바뀐 코드만 골라 점검</li><li>지난 결과를 이어받아 놓친 부분까지 추적</li><li>급한 보안 문의는 가장 먼저 처리</li></ul>
+<ul><li>릴리스마다 새로 바뀐 코드만 골라 점검</li><li>지난 리포트에서 해결되지 않은 항목을 다음 점검에서 다시 확인</li><li>급한 보안 문의는 우선 처리</li></ul>
 <a class="btn line" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">Retainer 상담하기</a></div>
 </div>
-<p class="fine">금액은 저장소 규모에 따라 조정됩니다. 본 점검은 법정 인증이나 모의해킹 확인서를 대체하지 않습니다.</p>
+<p class="fine">금액은 저장소 규모에 따라 조정됩니다. 현재 공개 GitHub 저장소만 점검할 수 있습니다. 본 점검은 법정 인증이나 모의해킹 확인서를 대체하지 않습니다.</p>
 </div></section>
 
 <section id="trust"><div class="wrap">
@@ -220,7 +223,7 @@ footer{background:var(--dark-bg);color:var(--dark-muted);padding:var(--s4) 0 var
 
 <div class="final"><div class="wrap">
 <h2>코드를 보내기 전에, 먼저 물어보세요</h2>
-<p class="sub">저장소 주소와 연락처만 남기면 어떤 점검이 맞는지 알려드립니다. 소스코드는 이 단계에서 필요하지 않습니다.</p>
+<p class="sub">저장소 주소만 남기면 어떤 점검이 맞는지 알려드립니다. 소스코드는 이 단계에서 필요하지 않습니다.</p>
 <div class="cta"><a class="btn" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">점검 문의하기</a><a class="btn line" href="sample.html">샘플 리포트 보기</a></div>
 </div></div>
 <footer><div class="wrap">Metacog Audit · 제3자 코드 보안 점검 · security-audit.metacog.co.kr</div></footer>
