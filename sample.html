@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>샘플 리포트: 탐지력 시험 — Metacog Audit</title>
+<meta name="description" content="취약점이 알려진 연습용 앱(DVPWA)으로 Metacog Audit의 탐지력을 시험한 결과를 그대로 공개합니다.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<style>
+/* primitive */
+:root{
+--navy-950:#070b14;--navy-900:#0c1220;--navy-800:#131b2e;--navy-700:#1c2740;
+--slate-50:#f6f8fb;--slate-100:#eaeff6;--slate-300:#c3cddd;--slate-500:#5b6b84;--slate-900:#0d1424;
+--teal-400:#2dd4bf;--teal-600:#0d9488;--teal-700:#0f766e;
+--space-1:4px;--space-2:8px;--space-3:16px;--space-4:24px;--space-5:40px;--space-6:72px;
+--radius-s:6px;--radius-m:12px;
+--font-sans:system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+--font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+/* semantic (light) */
+--bg:var(--slate-50);--surface:#fff;--border:var(--slate-100);--fg:var(--slate-900);--muted:var(--slate-500);
+--accent:var(--teal-700);--on-accent:#fff;--accent-text:var(--teal-700);
+/* component */
+--btn-bg:var(--accent);--btn-fg:var(--on-accent);--card-bg:var(--surface);--card-border:var(--border);
+}
+@media(prefers-color-scheme:dark){:root{
+--bg:var(--navy-950);--surface:var(--navy-800);--border:var(--navy-700);--fg:#e8edf6;--muted:#93a1ba;
+--accent:var(--teal-400);--on-accent:var(--navy-950);--accent-text:var(--teal-400)}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 var(--font-sans)}
+main{max-width:960px;margin:0 auto;padding:var(--space-6) var(--space-3)}
+.tag{font:600 13px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text);margin:0 0 var(--space-3)}
+h1{font-size:clamp(30px,5.5vw,52px);line-height:1.18;letter-spacing:-.02em;margin:0 0 var(--space-3)}
+h2{font-size:24px;margin:var(--space-6) 0 var(--space-4)}
+p.lead{font-size:18px;color:var(--muted);max-width:620px;margin:0 0 var(--space-4)}
+.btn{display:inline-block;background:var(--btn-bg);color:var(--btn-fg);padding:14px 26px;min-height:44px;border-radius:var(--radius-s);text-decoration:none;font-weight:700}
+.btn:hover{filter:brightness(1.1)}.btn:focus-visible{outline:3px solid var(--accent-text);outline-offset:3px}
+.steps{list-style:none;padding:0;margin:0;display:grid;gap:var(--space-3);grid-template-columns:repeat(auto-fit,minmax(170px,1fr));counter-reset:s}
+.steps li{counter-increment:s;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-m);padding:var(--space-4) var(--space-3)}
+.steps li::before{content:"0" counter(s);display:block;font:700 13px var(--font-mono);color:var(--accent-text);margin-bottom:var(--space-2)}
+.steps b{display:block}.steps span{color:var(--muted);font-size:14px}
+.grid{display:grid;gap:var(--space-3);grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-m);padding:var(--space-4)}
+.card.pro{border-color:var(--accent-text);box-shadow:0 0 0 1px var(--accent-text)}
+.card .desc{margin:var(--space-2) 0 0;color:var(--muted)}
+footer{margin-top:var(--space-6)}
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg);font:700 18px var(--font-mono);margin-bottom:var(--space-5)}
+.brand svg{width:32px;height:32px}.brand .f{stroke:var(--fg)}.brand .c{stroke:var(--accent-text)}.brand b{color:var(--accent-text)}
+.card h3{margin:0;font-size:16px;font-family:var(--font-mono);color:var(--accent-text)}
+.price{font-size:28px;font-weight:800;margin:var(--space-2) 0}
+.card{display:flex;flex-direction:column}
+.card ul{padding-left:18px;margin:var(--space-3) 0;color:var(--muted);flex:1}li{margin:6px 0}
+.who{font-size:13px;color:var(--muted);margin:var(--space-2) 0 0}
+.hook{font-size:19px;font-weight:800;line-height:1.4;margin:var(--space-2) 0 0}
+.per{font-size:14px;font-weight:500;color:var(--muted)}
+.badge{align-self:flex-start;font:700 12px var(--font-mono);background:var(--accent);color:var(--on-accent);padding:2px 8px;border-radius:var(--radius-s);margin-bottom:var(--space-2)}
+.btn.ghost{background:transparent;color:var(--accent-text);border:1px solid var(--accent-text);text-align:center}
+.section-lead{color:var(--muted);margin:calc(-1*var(--space-3)) 0 var(--space-4)}
+small{color:var(--muted)}
+.trust{padding:0;list-style:none}.trust li{padding-left:28px;position:relative}
+.trust li::before{content:"✓";position:absolute;left:0;color:var(--accent-text);font-weight:700}
+@media(prefers-reduced-motion:no-preference){.btn{transition:filter .15s}}
+</style><style>
+table{width:100%;border-collapse:collapse;margin:var(--space-3) 0;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+th{font:600 13px var(--font-mono);color:var(--muted)}
+.ok{color:var(--accent-text);font-weight:700}.part{color:#b45309;font-weight:700}
+@media(prefers-color-scheme:dark){.part{color:#fbbf24}}
+code{font:13px var(--font-mono);background:var(--card-bg);border:1px solid var(--border);padding:1px 6px;border-radius:var(--radius-s)}
+.sev{font:700 12px var(--font-mono);padding:2px 8px;border-radius:var(--radius-s);background:var(--accent);color:var(--on-accent)}
+</style></head><body><main>
+<a class="brand" href="/" aria-label="Metacog Audit 홈"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="f" d="M6 22V6h16M42 6h16v16M58 42v16H42M22 58H6V42" stroke-width="6"/><path class="c" d="M20 33l8.5 8.5L45 24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Metacog<b>Audit</b></span></a>
+<p class="tag">Public Scorecard · Sample Report</p>
+<h1>탐지력 시험 결과를 그대로 공개합니다</h1>
+<p class="lead">취약점이 의도적으로 심어진 학습용 앱 <b>DVPWA</b>(<a href="https://github.com/anxolerd/dvpwa">anxolerd/dvpwa</a>, MIT)에 Metacog Audit를 실제로 돌렸습니다. 정답지는 저장소 README에 적힌 취약점 5개입니다.</p>
+
+<h2>정답지 대비 결과</h2>
+<table>
+<tr><th>README에 적힌 취약점</th><th>결과</th></tr>
+<tr><td>SQL 인젝션</td><td><span class="ok">확정</span> · 심각도 high</td></tr>
+<tr><td>저장형 XSS</td><td><span class="ok">확정</span> · 심각도 medium</td></tr>
+<tr><td>취약한 비밀번호 저장(MD5)</td><td><span class="part">부분</span> · 독립 취약점이 아닌 영향·수정 권고로 기재</td></tr>
+<tr><td>CSRF</td><td><span class="part">부분</span> · 방어 비활성을 확인했으나 수정 권고로 기재</td></tr>
+<tr><td>세션 고정</td><td><span class="part">부분</span> · "로그인 시 세션 ID 갱신" 권고로 기재, 취약점으로 확정하지는 않음</td></tr>
+</table>
+<p>추가로, README에 없는 <b>인증 없이 쓰기 가능한 엔드포인트</b>(성적 입력·과목·학생 생성)도 확정했습니다. 실제로 존재하는 결함이지만 정답지에는 없던 항목입니다.</p>
+<p><b>요약: 정답 5개 중 2개 확정, 3개는 권고 수준으로 언급, 추가 확정 1개.</b> 못 잡은 것과 약하게 잡은 것을 숨기지 않습니다.</p>
+
+<h2>확정된 취약점</h2>
+<div class="grid">
+<div class="card"><span class="sev">HIGH</span><h3>비인증 SQL 인젝션</h3><p class="desc"><code>POST /students/</code> 한 번으로 사용자명과 비밀번호 해시 전체를 읽을 수 있습니다. 파라미터 바인딩과 인증 추가를 권고했습니다.</p></div>
+<div class="card"><span class="sev">MEDIUM</span><h3>저장형 XSS</h3><p class="desc">템플릿 자동 이스케이프가 꺼져 있어 익명 작성자의 스크립트가 방문자·관리자 브라우저에서 실행됩니다.</p></div>
+<div class="card"><span class="sev">MEDIUM</span><h3>쓰기 동작에 서버 측 권한 검사 없음</h3><p class="desc">관리자 전용으로 의도된 성적 입력 등이 쿠키 없이 가능합니다. 화면 버튼만 숨겨져 있었습니다.</p></div>
+</div>
+
+<h2>이 시험이 말해주지 않는 것</h2>
+<ul>
+<li>대상 코드를 <b>실행하지 않은</b> 소스 분석 결과입니다. 그래서 모든 "관찰된 결과"는 소스 추적으로 도출했고, 라이브러리 동작에 의존하는 사실은 "추가확인 필요"로 따로 분리했습니다.</li>
+<li>작은 시험용 앱 한 곳의 결과입니다. 실제 서비스에서의 탐지율을 보증하지 않습니다.</li>
+<li>AI 에이전트 34회 호출(정찰 4, 탐색 11, 커버리지 점검 5, 후보 검증 8, 기록 검증 6)로 약 28분이 걸렸습니다.</li>
+</ul>
+<p><a class="btn" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">우리 코드도 점검 문의하기</a></p>
+<footer><small>Metacog Audit · 제3자 코드 보안 점검 · <a href="/">처음으로</a></small></footer>
+</main></body></html>
