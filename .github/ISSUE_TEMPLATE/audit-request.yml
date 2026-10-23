@@ -33,6 +33,16 @@ body:
       options: [한국어, English]
     validations: {required: true}
   - type: checkboxes
+    id: focus
+    attributes:
+      label: 중점 점검 영역 (선택, Audit 플랜에만 적용)
+      description: 선택한 영역에 탐색을 더 배정합니다. 나머지 영역도 그대로 점검합니다.
+      options:
+        - label: 인증·권한·세션
+        - label: 데이터 분리·민감 정보
+        - label: 외부 입력·API·업로드
+        - label: 배포·CI·공급망·AI 기능
+  - type: checkboxes
     id: consent
     attributes:
       label: 확인

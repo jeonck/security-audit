@@ -33,6 +33,16 @@ body:
       options: [English, Korean (한국어)]
     validations: {required: true}
   - type: checkboxes
+    id: focus
+    attributes:
+      label: Focus areas (optional, Audit plan only)
+      description: We assign extra analysis to the areas you select. All other areas are still reviewed.
+      options:
+        - label: Authentication, authorization, sessions
+        - label: Data isolation and sensitive data
+        - label: External input, APIs, uploads
+        - label: Deployment, CI, supply chain, AI features
+  - type: checkboxes
     id: consent
     attributes:
       label: Confirmation
