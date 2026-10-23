@@ -6,43 +6,74 @@
 <title>Security Audit — 스타트업 코드 보안 점검</title>
 <meta name="description" content="6단계 AI 에이전트 감사와 사람의 검토로 소규모 팀의 코드 취약점을 찾아 교차 검증된 리포트로 드립니다.">
 <style>
-:root{--bg:#fff;--fg:#111827;--mut:#6b7280;--card:#f3f4f6;--acc:#2563eb;--on:#fff}
-@media(prefers-color-scheme:dark){:root{--bg:#0b0f17;--fg:#e5e7eb;--mut:#9ca3af;--card:#161c28;--acc:#60a5fa;--on:#0b0f17}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
-main{max-width:960px;margin:0 auto;padding:48px 16px}
-h1{font-size:clamp(28px,5vw,44px);line-height:1.2;margin:0 0 16px}h2{margin:56px 0 16px}
-p.lead{font-size:18px;color:var(--mut);max-width:640px}
-.btn{display:inline-block;background:var(--acc);color:var(--on);padding:12px 22px;border-radius:8px;text-decoration:none;font-weight:600}
-.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
-.card{background:var(--card);border-radius:12px;padding:24px}.card h3{margin:0 0 4px}.price{font-size:26px;font-weight:700;margin:8px 0}
-.card ul{padding-left:18px;margin:12px 0;color:var(--mut)}ol{padding-left:20px}li{margin:6px 0}
-small,footer{color:var(--mut)}footer{margin-top:64px;font-size:14px}
+/* primitive */
+:root{
+--navy-950:#070b14;--navy-900:#0c1220;--navy-800:#131b2e;--navy-700:#1c2740;
+--slate-50:#f6f8fb;--slate-100:#eaeff6;--slate-300:#c3cddd;--slate-500:#5b6b84;--slate-900:#0d1424;
+--teal-400:#2dd4bf;--teal-600:#0d9488;--teal-700:#0f766e;
+--space-1:4px;--space-2:8px;--space-3:16px;--space-4:24px;--space-5:40px;--space-6:72px;
+--radius-s:6px;--radius-m:12px;
+--font-sans:system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+--font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+/* semantic (light) */
+--bg:var(--slate-50);--surface:#fff;--border:var(--slate-100);--fg:var(--slate-900);--muted:var(--slate-500);
+--accent:var(--teal-700);--on-accent:#fff;--accent-text:var(--teal-700);
+/* component */
+--btn-bg:var(--accent);--btn-fg:var(--on-accent);--card-bg:var(--surface);--card-border:var(--border);
+}
+@media(prefers-color-scheme:dark){:root{
+--bg:var(--navy-950);--surface:var(--navy-800);--border:var(--navy-700);--fg:#e8edf6;--muted:#93a1ba;
+--accent:var(--teal-400);--on-accent:var(--navy-950);--accent-text:var(--teal-400)}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 var(--font-sans)}
+main{max-width:960px;margin:0 auto;padding:var(--space-6) var(--space-3)}
+.tag{font:600 13px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text);margin:0 0 var(--space-3)}
+h1{font-size:clamp(30px,5.5vw,52px);line-height:1.18;letter-spacing:-.02em;margin:0 0 var(--space-3)}
+h2{font-size:24px;margin:var(--space-6) 0 var(--space-4)}
+p.lead{font-size:18px;color:var(--muted);max-width:620px;margin:0 0 var(--space-4)}
+.btn{display:inline-block;background:var(--btn-bg);color:var(--btn-fg);padding:14px 26px;min-height:44px;border-radius:var(--radius-s);text-decoration:none;font-weight:700}
+.btn:hover{filter:brightness(1.1)}.btn:focus-visible{outline:3px solid var(--accent-text);outline-offset:3px}
+.steps{list-style:none;padding:0;margin:0;display:grid;gap:var(--space-3);grid-template-columns:repeat(auto-fit,minmax(170px,1fr));counter-reset:s}
+.steps li{counter-increment:s;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-m);padding:var(--space-4) var(--space-3)}
+.steps li::before{content:"0" counter(s);display:block;font:700 13px var(--font-mono);color:var(--accent-text);margin-bottom:var(--space-2)}
+.steps b{display:block}.steps span{color:var(--muted);font-size:14px}
+.grid{display:grid;gap:var(--space-3);grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-m);padding:var(--space-4)}
+.card.pro{border-color:var(--accent-text);box-shadow:0 0 0 1px var(--accent-text)}
+.card h3{margin:0;font-size:16px;font-family:var(--font-mono);color:var(--accent-text)}
+.price{font-size:28px;font-weight:800;margin:var(--space-2) 0}
+.card ul{padding-left:18px;margin:var(--space-3) 0 0;color:var(--muted)}li{margin:6px 0}
+small{color:var(--muted)}
+.trust{padding:0;list-style:none}.trust li{padding-left:28px;position:relative}
+.trust li::before{content:"✓";position:absolute;left:0;color:var(--accent-text);font-weight:700}
+@media(prefers-reduced-motion:no-preference){.btn{transition:filter .15s}}
 </style>
 </head>
 <body><main>
+<p class="tag">Code Security Audit</p>
 <h1>출시 전에, 공격자보다 먼저<br>코드의 취약점을 찾습니다</h1>
 <p class="lead">6단계 보안 감사 방법론을 AI 에이전트로 실행하고, 오탐은 별도 검증기가 걸러냅니다. 스타트업·소규모 팀을 위한 합리적인 코드 보안 리뷰입니다.</p>
 <p><a class="btn" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">점검 문의하기</a></p>
 
 <h2>진행 방식</h2>
-<ol>
-<li><b>정찰</b> — 아키텍처·신뢰 경계·입력 지점 매핑</li>
-<li><b>탐색</b> — 격리된 에이전트가 공격 유형별로 취약점 사냥</li>
-<li><b>검증</b> — 별도 에이전트가 각 후보를 반증 시도</li>
-<li><b>기록·재검증</b> — 소스 근거를 독립적으로 재확인</li>
-<li><b>리포트</b> — 확정 / 추가확인 필요 / 기각으로 구분해 전달</li>
+<ol class="steps">
+<li><b>정찰</b><span>아키텍처·신뢰 경계·입력 지점 매핑</span></li>
+<li><b>탐색</b><span>격리된 에이전트가 공격 유형별로 취약점 사냥</span></li>
+<li><b>검증</b><span>별도 에이전트가 각 후보를 반증 시도</span></li>
+<li><b>기록·재검증</b><span>소스 근거를 독립적으로 재확인</span></li>
+<li><b>리포트</b><span>확정 / 추가확인 필요 / 기각으로 구분해 전달</span></li>
 </ol>
 
 <h2>플랜</h2>
 <div class="grid">
 <div class="card"><h3>Scan</h3><div class="price">₩490,000~</div><ul><li>단일 저장소 자동 감사</li><li>확정 취약점 요약 리포트</li><li>1회 Q&amp;A</li></ul></div>
-<div class="card"><h3>Audit</h3><div class="price">₩1,900,000~</div><ul><li>전체 6단계 + 전문가 검토</li><li>상세 재현 경로·수정 가이드</li><li>수정 후 재점검 1회</li></ul></div>
+<div class="card pro"><h3>Audit</h3><div class="price">₩1,900,000~</div><ul><li>전체 6단계 + 전문가 검토</li><li>상세 재현 경로·수정 가이드</li><li>수정 후 재점검 1회</li></ul></div>
 <div class="card"><h3>Retainer</h3><div class="price">₩990,000/월</div><ul><li>릴리스마다 변경분 점검</li><li>누적 커버리지 추적</li><li>우선 대응</li></ul></div>
 </div>
 <small>금액은 저장소 규모에 따라 조정됩니다.</small>
 
 <h2>신뢰와 보안</h2>
-<ul>
+<ul class="trust">
 <li>점검은 소유권 또는 서면 허가가 확인된 코드에만 수행합니다.</li>
 <li>리포트는 암호화해 전달하며, 점검 후 작업 사본은 삭제합니다.</li>
 <li>AI 결과는 사람이 검토하지만, 취약점 부재를 보증하지는 않습니다.</li>
