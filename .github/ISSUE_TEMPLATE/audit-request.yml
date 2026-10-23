@@ -1,28 +1,31 @@
 name: 보안 점검 문의
-description: 코드 보안 점검을 신청합니다. 소스코드·비밀키는 절대 이 이슈에 붙이지 마세요.
+description: 공개 저장소의 보안 점검을 신청합니다.
 title: "[문의] "
 labels: ["audit-request"]
 body:
   - type: markdown
     attributes:
       value: |
-        이 이슈는 **공개**됩니다. 저장소 주소 외 민감 정보는 적지 마세요.
-        비공개 저장소는 접수 후 별도 안내드리는 방법으로 읽기 권한을 받습니다.
+        이 이슈는 **공개**됩니다. 이메일, 소스코드, 비밀키, 토큰은 절대 적지 마세요.
+        연락은 이 이슈의 작성자 GitHub 계정과 이슈 코멘트로 드립니다.
+        현재는 **공개 저장소만** 접수합니다. 비공개 저장소는 지원하지 않습니다.
   - type: input
-    id: contact
+    id: repo
     attributes:
-      label: 연락처 (이메일)
+      label: 저장소 주소
+      description: "예: https://github.com/owner/name"
     validations: {required: true}
+  - type: input
+    id: ref
+    attributes:
+      label: 브랜치/태그/커밋 (선택)
+      description: 비우면 기본 브랜치를 점검합니다.
   - type: dropdown
     id: plan
     attributes:
       label: 희망 플랜
       options: [Scan, Audit, Retainer]
     validations: {required: true}
-  - type: input
-    id: stack
-    attributes:
-      label: 주요 언어/프레임워크
   - type: checkboxes
     id: consent
     attributes:
