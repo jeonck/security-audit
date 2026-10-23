@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>샘플 리포트: 탐지력 시험 — Metacog Audit</title>
-<meta name="description" content="취약점이 알려진 연습용 앱(DVPWA)으로 Metacog Audit의 탐지력을 시험한 결과를 그대로 공개합니다.">
+<meta name="description" content="취약점이 알려진 연습용 앱(DVPWA)으로 Metacog Audit의 탐지력을 시험한 결과를 대시보드로 공개합니다.">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <style>
 /* primitive */
@@ -57,43 +57,91 @@ small{color:var(--muted)}
 .trust li::before{content:"✓";position:absolute;left:0;color:var(--accent-text);font-weight:700}
 @media(prefers-reduced-motion:no-preference){.btn{transition:filter .15s}}
 </style><style>
-table{width:100%;border-collapse:collapse;margin:var(--space-3) 0;font-size:15px}
-th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
-th{font:600 13px var(--font-mono);color:var(--muted)}
-.ok{color:var(--accent-text);font-weight:700}.part{color:#b45309;font-weight:700}
-@media(prefers-color-scheme:dark){.part{color:#fbbf24}}
-code{font:13px var(--font-mono);background:var(--card-bg);border:1px solid var(--border);padding:1px 6px;border-radius:var(--radius-s)}
-.sev{font:700 12px var(--font-mono);padding:2px 8px;border-radius:var(--radius-s);background:var(--accent);color:var(--on-accent)}
+:root{--ok:var(--accent-text);--warn:#b45309;--hi:#b91c1c;--mid:#b45309;--track:var(--border)}
+@media(prefers-color-scheme:dark){:root{--warn:#fbbf24;--hi:#f87171;--mid:#fbbf24}}
+main{max-width:1040px}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--space-3);align-items:flex-end;margin-bottom:var(--space-4)}
+.head h1{font-size:clamp(26px,4vw,36px);margin:0}.meta{font:13px var(--font-mono);color:var(--muted)}
+.kpis{display:grid;gap:var(--space-3);grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.kpi{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-m);padding:var(--space-3) var(--space-4)}
+.kpi .l{font-size:13px;color:var(--muted)}.kpi .v{font-size:38px;font-weight:800;line-height:1.15;letter-spacing:-.02em}.kpi .s{font-size:13px;color:var(--muted)}
+.panels{display:grid;gap:var(--space-3);grid-template-columns:repeat(auto-fit,minmax(320px,1fr));margin-top:var(--space-3)}
+.panel{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-m);padding:var(--space-4)}
+.panel h2{font-size:16px;margin:0 0 var(--space-3)}
+.seg{display:flex;gap:2px;height:28px}.seg i{display:block;border-radius:4px}
+.legend{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-3);font-size:13px;color:var(--muted)}
+.legend b{color:var(--fg)}.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+.bars{display:grid;gap:10px}.bar{display:grid;grid-template-columns:88px 1fr 28px;align-items:center;gap:var(--space-2);font-size:13px}
+.bar .t{height:14px;background:var(--track);border-radius:4px}.bar .t i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.bar b{text-align:right;font-family:var(--font-mono)}
+.sec{margin:var(--space-5) 0 var(--space-3);font-size:18px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--border);vertical-align:top}
+th{font:600 12px var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.chip{display:inline-flex;align-items:center;gap:6px;font:700 12px var(--font-mono);padding:3px 9px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.chip.ok{color:var(--ok)}.chip.part{color:var(--warn)}.chip.hi{color:var(--hi)}.chip.mid{color:var(--mid)}
+.wrap{overflow-x:auto}
+details{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-m);padding:var(--space-3) var(--space-4);margin-bottom:var(--space-2)}
+summary{cursor:pointer;display:flex;gap:var(--space-3);align-items:center;font-weight:700;list-style:none}
+summary::-webkit-details-marker{display:none}summary::after{content:"＋";margin-left:auto;color:var(--muted)}details[open] summary::after{content:"－"}
+details p{color:var(--muted);margin:var(--space-2) 0 0;font-size:14px}details p b{color:var(--fg)}
+.note{font-size:14px;color:var(--muted)}
 </style></head><body><main>
 <a class="brand" href="/" aria-label="Metacog Audit 홈"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="f" d="M6 22V6h16M42 6h16v16M58 42v16H42M22 58H6V42" stroke-width="6"/><path class="c" d="M20 33l8.5 8.5L45 24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Metacog<b>Audit</b></span></a>
-<p class="tag">Public Scorecard · Sample Report</p>
-<h1>탐지력 시험 결과를 그대로 공개합니다</h1>
-<p class="lead">취약점이 의도적으로 심어진 학습용 앱 <b>DVPWA</b>(<a href="https://github.com/anxolerd/dvpwa">anxolerd/dvpwa</a>, MIT)에 Metacog Audit를 실제로 돌렸습니다. 정답지는 저장소 README에 적힌 취약점 5개입니다.</p>
+<div class="head"><div><p class="tag">Sample Report · Detection Test</p><h1>DVPWA 탐지력 시험</h1></div>
+<div class="meta">대상 anxolerd/dvpwa · standard 프로필 · 소스 분석 · 약 28분</div></div>
 
-<h2>정답지 대비 결과</h2>
-<table>
-<tr><th>README에 적힌 취약점</th><th>결과</th></tr>
-<tr><td>SQL 인젝션</td><td><span class="ok">확정</span> · 심각도 high</td></tr>
-<tr><td>저장형 XSS</td><td><span class="ok">확정</span> · 심각도 medium</td></tr>
-<tr><td>취약한 비밀번호 저장(MD5)</td><td><span class="part">부분</span> · 독립 취약점이 아닌 영향·수정 권고로 기재</td></tr>
-<tr><td>CSRF</td><td><span class="part">부분</span> · 방어 비활성을 확인했으나 수정 권고로 기재</td></tr>
-<tr><td>세션 고정</td><td><span class="part">부분</span> · "로그인 시 세션 ID 갱신" 권고로 기재, 취약점으로 확정하지는 않음</td></tr>
-</table>
-<p>추가로, README에 없는 <b>인증 없이 쓰기 가능한 엔드포인트</b>(성적 입력·과목·학생 생성)도 확정했습니다. 실제로 존재하는 결함이지만 정답지에는 없던 항목입니다.</p>
-<p><b>요약: 정답 5개 중 2개 확정, 3개는 권고 수준으로 언급, 추가 확정 1개.</b> 못 잡은 것과 약하게 잡은 것을 숨기지 않습니다.</p>
-
-<h2>확정된 취약점</h2>
-<div class="grid">
-<div class="card"><span class="sev">HIGH</span><h3>비인증 SQL 인젝션</h3><p class="desc"><code>POST /students/</code> 한 번으로 사용자명과 비밀번호 해시 전체를 읽을 수 있습니다. 파라미터 바인딩과 인증 추가를 권고했습니다.</p></div>
-<div class="card"><span class="sev">MEDIUM</span><h3>저장형 XSS</h3><p class="desc">템플릿 자동 이스케이프가 꺼져 있어 익명 작성자의 스크립트가 방문자·관리자 브라우저에서 실행됩니다.</p></div>
-<div class="card"><span class="sev">MEDIUM</span><h3>쓰기 동작에 서버 측 권한 검사 없음</h3><p class="desc">관리자 전용으로 의도된 성적 입력 등이 쿠키 없이 가능합니다. 화면 버튼만 숨겨져 있었습니다.</p></div>
+<div class="kpis">
+<div class="kpi"><div class="l">정답 5개 중 확정</div><div class="v" style="color:var(--ok)">2</div><div class="s">SQL 인젝션 · 저장형 XSS</div></div>
+<div class="kpi"><div class="l">권고 수준으로 언급</div><div class="v" style="color:var(--warn)">3</div><div class="s">MD5 · CSRF · 세션 고정</div></div>
+<div class="kpi"><div class="l">정답지 밖 추가 확정</div><div class="v">1</div><div class="s">쓰기 동작에 서버 권한 검사 없음</div></div>
+<div class="kpi"><div class="l">완전 누락</div><div class="v">0</div><div class="s">5개 모두 리포트에 등장</div></div>
 </div>
 
-<h2>이 시험이 말해주지 않는 것</h2>
-<ul>
-<li>대상 코드를 <b>실행하지 않은</b> 소스 분석 결과입니다. 그래서 모든 "관찰된 결과"는 소스 추적으로 도출했고, 라이브러리 동작에 의존하는 사실은 "추가확인 필요"로 따로 분리했습니다.</li>
-<li>작은 시험용 앱 한 곳의 결과입니다. 실제 서비스에서의 탐지율을 보증하지 않습니다.</li>
-<li>AI 에이전트 34회 호출(정찰 4, 탐색 11, 커버리지 점검 5, 후보 검증 8, 기록 검증 6)로 약 28분이 걸렸습니다.</li>
+<div class="panels">
+<div class="panel"><h2>정답지 5개 탐지 수준</h2>
+<div class="seg" role="img" aria-label="확정 2, 권고 3, 누락 0"><i style="flex:2;background:var(--ok)"></i><i style="flex:3;background:var(--warn)"></i></div>
+<div class="legend"><span><span class="dot" style="background:var(--ok)"></span><b>확정 2</b></span><span><span class="dot" style="background:var(--warn)"></span><b>권고 3</b></span><span><span class="dot" style="background:var(--track)"></span><b>누락 0</b></span></div>
+<p class="note" style="margin-top:var(--space-3)">"권고"는 독립 취약점으로 확정하지 않고 영향·수정 권고로 적은 경우입니다.</p></div>
+<div class="panel"><h2>에이전트 투입 (총 34회)</h2>
+<div class="bars">
+<div class="bar"><span>탐색</span><span class="t"><i style="width:100%"></i></span><b>11</b></div>
+<div class="bar"><span>후보 검증</span><span class="t"><i style="width:73%"></i></span><b>8</b></div>
+<div class="bar"><span>기록 검증</span><span class="t"><i style="width:55%"></i></span><b>6</b></div>
+<div class="bar"><span>커버리지 점검</span><span class="t"><i style="width:45%"></i></span><b>5</b></div>
+<div class="bar"><span>정찰</span><span class="t"><i style="width:36%"></i></span><b>4</b></div>
+</div></div>
+<div class="panel"><h2>리포트 판정 8건</h2>
+<div class="seg" role="img" aria-label="확정 3, 추가확인 필요 2, 기각 3"><i style="flex:3;background:var(--ok)"></i><i style="flex:2;background:var(--warn)"></i><i style="flex:3;background:var(--muted)"></i></div>
+<div class="legend"><span><span class="dot" style="background:var(--ok)"></span><b>확정 3</b></span><span><span class="dot" style="background:var(--warn)"></span><b>추가확인 필요 2</b></span><span><span class="dot" style="background:var(--muted)"></span><b>기각 3</b></span></div>
+<p class="note" style="margin-top:var(--space-3)">후보를 검증으로 걸러 3건을 기각했습니다.</p></div>
+</div>
+
+<h2 class="sec">확정된 취약점 3건</h2>
+<details open><summary><span class="chip hi">▲ HIGH</span> 비인증 SQL 인젝션</summary>
+<p><b>위치</b> <code>sqli/dao/student.py:42</code> · <b>익명 요청 1번</b>으로 사용자명과 비밀번호 해시 전체 읽기 가능.</p>
+<p><b>수정</b> 파라미터 바인딩, 해당 라우트 인증 추가, 최소 권한 DB 계정.</p></details>
+<details><summary><span class="chip mid">● MEDIUM</span> 저장형 XSS</summary>
+<p><b>위치</b> <code>sqli/app.py:35</code> (<code>autoescape=False</code>) · 익명 작성자의 스크립트가 방문자·관리자 브라우저에서 실행.</p>
+<p><b>수정</b> 자동 이스케이프 켜기, 세션 쿠키 <code>httponly</code>, CSP 추가.</p></details>
+<details><summary><span class="chip mid">● MEDIUM</span> 쓰기 동작에 서버 측 권한 검사 없음</summary>
+<p><b>위치</b> <code>sqli/views.py:52,84,135</code> · 관리자 전용으로 의도된 성적 입력·과목 생성이 쿠키 없이 가능. 화면 버튼만 숨겨져 있었습니다.</p>
+<p><b>수정</b> 해당 POST에 관리자 인가 데코레이터 적용 후 401/403 회귀 테스트.</p></details>
+
+<h2 class="sec">정답지 대조</h2>
+<div class="wrap"><table>
+<tr><th>README 취약점</th><th>판정</th><th>리포트에서의 위치</th></tr>
+<tr><td>SQL 인젝션</td><td><span class="chip ok">✔ 확정</span></td><td>확정 취약점 (high)</td></tr>
+<tr><td>저장형 XSS</td><td><span class="chip ok">✔ 확정</span></td><td>확정 취약점 (medium)</td></tr>
+<tr><td>MD5 비밀번호 저장</td><td><span class="chip part">◐ 권고</span></td><td>SQL 인젝션 영향·수정 권고에 기재</td></tr>
+<tr><td>CSRF</td><td><span class="chip part">◐ 권고</span></td><td>CSRF 미들웨어 비활성 확인, 수정 권고</td></tr>
+<tr><td>세션 고정</td><td><span class="chip part">◐ 권고</span></td><td>"로그인 시 세션 ID 갱신" 권고</td></tr>
+</table></div>
+
+<h2 class="sec">이 시험이 말해주지 않는 것</h2>
+<ul class="note">
+<li>대상 코드를 <b>실행하지 않은</b> 소스 분석입니다. 라이브러리 동작에 의존하는 사실은 "추가확인 필요"로 따로 분리했습니다.</li>
+<li>작은 시험용 앱 한 곳의 결과이며, 실제 서비스의 탐지율을 보증하지 않습니다.</li>
+<li>정답 5개 중 3개를 독립 취약점으로 확정하지 못한 점은 개선 과제입니다.</li>
 </ul>
 <p><a class="btn" href="https://github.com/jeonck/security-audit/issues/new?template=audit-request.yml">우리 코드도 점검 문의하기</a></p>
 <footer><small>Metacog Audit · 제3자 코드 보안 점검 · <a href="/">처음으로</a></small></footer>
