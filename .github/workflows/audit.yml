@@ -37,8 +37,8 @@ jobs:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           OUT="$RUNNER_TEMP/out"; mkdir -p "$OUT"
-          claude -p "Use the security-audit skill to run a full security audit of this codebase. Output directory: $OUT. Run the full six-phase audit with hunter and verifier agents. Do not execute target code or install dependencies." \
-            --allowedTools "Read Grep Glob Write Edit Agent Task Bash(node:*) Bash(git:*) Bash(ls:*) Bash(cat:*)" \
+          claude -p "Use the security-audit skill to run a full security audit of this codebase with the 'standard' profile (never 'quick'). Output directory: $OUT. Run the full six-phase audit with hunter and verifier agents. Do not execute target code or install dependencies. Write REPORT.md, FINDINGS-DETAIL.md and NEEDS-VALIDATION.md in Korean; keep JSON keys, enum values, file paths and code identifiers in English." \
+            --allowedTools "Read Grep Glob Write Edit Agent Task Bash(node:*) Bash(git:*) Bash(ls:*) Bash(cat:*) Bash(mkdir:*)" \
             --add-dir "$OUT" > "$RUNNER_TEMP/claude.log" 2>&1 || true
       - name: Encrypt report
         env: {PW: "${{ inputs.passphrase }}"}
