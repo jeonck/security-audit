@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+<!-- Metacog Audit symbol: 바깥 프레임(제3자의 시선) + 안쪽 체크(검증 통과) -->
+<style>.f{stroke:#0c1220}.c{stroke:#0d9488}@media(prefers-color-scheme:dark){.f{stroke:#e8edf6}.c{stroke:#2dd4bf}}</style>
+<path class="f" d="M6 22V6h16M42 6h16v16M58 42v16H42M22 58H6V42" stroke-width="6"/>
+<path class="c" d="M20 33l8.5 8.5L45 24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

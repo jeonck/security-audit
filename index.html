@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Metacog Audit — 제3자 코드 보안 점검</title>
 <meta name="description" content="6단계 AI 에이전트 감사와 사람의 검토로 소규모 팀의 코드 취약점을 찾아 교차 검증된 리포트로 드립니다.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<meta property="og:title" content="Metacog Audit — 제3자 코드 보안 점검">
 <style>
 /* primitive */
 :root{
@@ -42,6 +44,8 @@ p.lead{font-size:18px;color:var(--muted);max-width:620px;margin:0 0 var(--space-
 .card.pro{border-color:var(--accent-text);box-shadow:0 0 0 1px var(--accent-text)}
 .card .desc{margin:var(--space-2) 0 0;color:var(--muted)}
 footer{margin-top:var(--space-6)}
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg);font:700 18px var(--font-mono);margin-bottom:var(--space-5)}
+.brand svg{width:32px;height:32px}.brand .f{stroke:var(--fg)}.brand .c{stroke:var(--accent-text)}.brand b{color:var(--accent-text)}
 .card h3{margin:0;font-size:16px;font-family:var(--font-mono);color:var(--accent-text)}
 .price{font-size:28px;font-weight:800;margin:var(--space-2) 0}
 .card{display:flex;flex-direction:column}
@@ -59,6 +63,7 @@ small{color:var(--muted)}
 </style>
 </head>
 <body><main>
+<a class="brand" href="/" aria-label="Metacog Audit 홈"><svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="f" d="M6 22V6h16M42 6h16v16M58 42v16H42M22 58H6V42" stroke-width="6"/><path class="c" d="M20 33l8.5 8.5L45 24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Metacog<b>Audit</b></span></a>
 <p class="tag">Metacog Audit · 제3자 코드 보안 점검</p>
 <h1>내 코드는 내가 제일 못 봅니다.<br>그래서 제3자의 눈이 필요합니다</h1>
 <p class="lead">Metacog Audit는 코드를 대신 만들지도, 보안 제품을 팔지도 않는 독립 점검 서비스입니다. 찾아낸 후보마다 별도 검증을 거쳐, 증명된 것만 리포트에 씁니다.</p>
